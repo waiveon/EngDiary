@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+    <string name="app_name">EngDiary</string>
+    <string name="student">Student</string>
+    <string name="teacher">Teacher</string>
+    <string name="cancel">취소</string>
+    <string name="apply">적용</string>
+    <string name="register">등록</string>
+    <string name="create">생성</string>
+    <string name="login">로그인</string>
+    <string name="edit">수정</string>
+    <string name="auto_login">자동 로그인</string>
+    <string name="name">이름</string>
+    <string name="email">Email</string>
+    <string name="code_desc">신규 등록일 경우 코드를 생성해 주세요.</string>
+    <string name="error_code_create">이름과 이메일을 입력해 주세요.</string>
+    <string name="student_code">학생 코드</string>
+    <string name="teacher_code">선생님 코드</string>
+    <string name="diary">일기</string>
+    <string name="diary_desc">나는 학생이다.\nI am student.\n\n- 문장을 단락으로 나누면 좋습니다.</string>
+    <string name="english">영어</string>
+    <string name="korean">한국어</string>
+    <string name="save">저장</string>
+    <string name="temp_save">임시저장</string>
+    <string name="auto_line_feed">자동 줄 바꿈\n(마침표 찍고 한칸 띄면 자동으로 줄바꿈 됨)</string>
+    <string name="wrong_email">이메일 주소가 잘못 되었습니다.\n다시 입력해 주세요.</string>
+    <string name="welcome">%1$s님 환영합니다.</string>
+</resources>

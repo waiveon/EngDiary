@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "46351416111",
+    "firebase_url": "https://englishdiary-cb30c.firebaseio.com",
+    "project_id": "englishdiary-cb30c",
+    "storage_bucket": "englishdiary-cb30c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46351416111:android:acf05b0b3cabc29ce5ffda",
+        "android_client_info": {
+          "package_name": "sweetsound.com.engdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46351416111-nnc947gnvg360mufosi8onmu6u84q7uh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sweetsound.com.engdiary",
+            "certificate_hash": "5621d81cefb98f93951080c31df844f7fb084f27"
+          }
+        },
+        {
+          "client_id": "46351416111-bt4ro3orglq094v1j64gttdcb37fi9e3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAreIiMjoWVTS4up2pEXDXMuF5m8FbdIJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46351416111-bt4ro3orglq094v1j64gttdcb37fi9e3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
