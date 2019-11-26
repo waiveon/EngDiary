@@ -7,13 +7,14 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_login.*
 import sweetsound.com.engdiary.R
 import sweetsound.com.engdiary.constants.Constants
-import sweetsound.com.engdiary.data.User
+import sweetsound.com.engdiary.manager.LoginManager
 
 class LoginActivity(): AppCompatActivity() {
 
@@ -22,6 +23,7 @@ class LoginActivity(): AppCompatActivity() {
         val KEY_AUTO_LOGIN = "KEY_AUTO_LOGIN"
         val KEY_LOGIN_NAME = "KEY_LOGIN_NAME"
         val KEY_LOGIN_EMAIL = "KEY_LOGIN_EMAIL"
+        val KEY_LOGIN_PASSWD = "KEY_LOGIN_PASSWD"
         val KEY_LOGIN_TYPE = "KEY_LOGIN_TYPE"
 
         val SHARED_PREFERENCE_MY_CODE = "SHARED_PREFERENCE_MY_CODE"
@@ -69,28 +71,22 @@ class LoginActivity(): AppCompatActivity() {
         register_button.setOnClickListener {
             if (TextUtils.isEmpty(name_edittext.text) == false &&
                     TextUtils.isEmpty(email_edittext.text) == false &&
-                    TextUtils.isEmpty(code_textview.text) == false) {
-
-                var firebaseDbRef = firebaseDb.child(Constants.FIREBASE_TABLE_NAME_STUDENT)
-
-                when (intent.getIntExtra(INTENT_TYPE, Constants.STUDENT)) {
-                    Constants.TEATHER -> {
-                        firebaseDbRef = firebaseDb.child(Constants.FIREBASE_TABLE_NAME_TEATHER)
-                    }
-                }
-
-                val user = User(name_edittext.text.toString(), email_edittext.text.toString(), code_textview.text.toString())
-
-                firebaseDbRef.child(Constants.getKey(email_edittext.text.toString())).setValue(user, object: DatabaseReference.CompletionListener {
-                    override fun onComplete(databaseError: DatabaseError?, databaseRefernece: DatabaseReference) {
-                        if (databaseError == null) {
-                            Toast.makeText(baseContext, getString(R.string.welcome, name_edittext.text), Toast.LENGTH_SHORT).show()
+                    TextUtils.isEmpty(code_textview.text) == false &&
+                    TextUtils.isEmpty(passwd_edittext.text) == false) {
+                LoginManager.signUp(email_edittext.text.toString(), LoginManager.getPasswd(passwd_edittext.text.toString()), object: OnCompleteListener<AuthResult> {
+                    override fun onComplete(task: Task<AuthResult>) {
+                        if (task.isSuccessful == true) { // 등록 성공
+                            // 로그인 하자
+                            loginProc(email_edittext.text.toString(), passwd_edittext.text.toString())
+                        } else {
+                            // TODO 암호가 6자리 미만 (이건 미리 제한하자)
+                            // 이미 있는 이메일
+                            Toast.makeText(baseContext, R.string.already_email, Toast.LENGTH_SHORT).show()
                         }
                     }
                 })
 
                 getSharedPreferences(SHARED_PREFERENCE_MY_CODE, Activity.MODE_PRIVATE).edit().putString(KEY_MY_CODE, code_textview.text.toString()).commit()
-
             } else {
                 // 힌트 컬러 변경
                 if (TextUtils.isEmpty(name_edittext.text) == true) {
@@ -104,11 +100,27 @@ class LoginActivity(): AppCompatActivity() {
                 if (TextUtils.isEmpty(code_textview.text) == true) {
                     code_textview.setHintTextColor(Color.RED)
                 }
+
+                if (TextUtils.isEmpty(passwd_edittext.text) == true) {
+                    passwd_edittext.setHintTextColor(Color.RED)
+                }
             }
         }
 
         login_button.setOnClickListener {
+            if (TextUtils.isEmpty(email_edittext.text) == false &&
+                TextUtils.isEmpty(passwd_edittext.text) == false) {
+                loginProc(email_edittext.text.toString(), passwd_edittext.text.toString())
+            } else {
+                // 힌트 컬러 변경
+                if (TextUtils.isEmpty(email_edittext.text) == true) {
+                    email_edittext.setHintTextColor(Color.RED)
+                }
 
+                if (TextUtils.isEmpty(passwd_edittext.text) == true) {
+                    passwd_edittext.setHintTextColor(Color.RED)
+                }
+            }
         }
 
         auto_login_checkbox.setOnCheckedChangeListener { compoundButton, isChecked ->
@@ -119,6 +131,7 @@ class LoginActivity(): AppCompatActivity() {
                 sharedPreferenceEdit.putBoolean(KEY_AUTO_LOGIN, isChecked).commit()
                 sharedPreferenceEdit.putString(KEY_LOGIN_NAME, name_edittext.text.toString()).commit()
                 sharedPreferenceEdit.putString(KEY_LOGIN_EMAIL, email_edittext.text.toString()).commit()
+                sharedPreferenceEdit.putString(KEY_LOGIN_PASSWD, LoginManager.getPasswd(passwd_edittext.text.toString())).commit()
                 sharedPreferenceEdit.putInt(KEY_LOGIN_TYPE, intent.getIntExtra(INTENT_TYPE, Constants.STUDENT)).commit()
             } else {
                 sharedPreferenceEdit.clear()
@@ -142,5 +155,18 @@ class LoginActivity(): AppCompatActivity() {
                 Toast.makeText(baseContext, R.string.error_code_create, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun loginProc(email: String, passwd: String) {
+        LoginManager.login(email_edittext.text.toString(), LoginManager.getPasswd(passwd_edittext.text.toString()), object: OnCompleteListener<AuthResult> {
+            override fun onComplete(task: Task<AuthResult>) {
+                if (task.isSuccessful == true) {
+                    // 리스트 화면으로 이동
+                    DiaryListActivity.open(baseContext)
+                } else {
+                    // 등록이 안되어 있거나 네트워크 문제겠지.. 다시 하라고 하자.
+                }
+            }
+        })
     }
 }

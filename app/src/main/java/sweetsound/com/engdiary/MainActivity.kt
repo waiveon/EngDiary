@@ -2,13 +2,15 @@ package sweetsound.com.engdiary
 
 import android.app.Activity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import kotlinx.android.synthetic.main.activity_main.*
 import sweetsound.com.engdiary.constants.Constants
+import sweetsound.com.engdiary.manager.LoginManager
+import sweetsound.com.engdiary.ui.DiaryListActivity
 import sweetsound.com.engdiary.ui.LoginActivity
 
 class MainActivity : AppCompatActivity() {
@@ -21,23 +23,21 @@ class MainActivity : AppCompatActivity() {
 
         // 자동 로그인 체크해서 리스트 화면으로 바로 이동 하자
         if (sharedPreferenceLogin.getBoolean(LoginActivity.KEY_AUTO_LOGIN, false) == true) {
+            val email = sharedPreferenceLogin.getString(LoginActivity.KEY_LOGIN_EMAIL, "")
+            val passwd = sharedPreferenceLogin.getString(LoginActivity.KEY_LOGIN_PASSWD, "")
 
-            val firebaseDb = FirebaseDatabase.getInstance().reference
-            firebaseDb.addListenerForSingleValueEvent(object: ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    when (sharedPreferenceLogin.getInt(LoginActivity.KEY_LOGIN_TYPE, Constants.STUDENT)) {
-                        Constants.STUDENT -> dataSnapshot.child(Constants.FIREBASE_TABLE_NAME_STUDENT)
-
-                        Constants.TEATHER -> dataSnapshot.child(Constants.FIREBASE_TABLE_NAME_TEATHER)
+            LoginManager.login(email!!, passwd!!, object: OnCompleteListener<AuthResult> {
+                override fun onComplete(task: Task<AuthResult>) {
+                    if (task.isSuccessful == true) {
+                        // 리스트 화면으로 이동
+                        DiaryListActivity.open(baseContext)
+                    } else {
+                        // 로그인 실패
+                        // TODO 편리하게는 - 재시도 버튼 추가
+                        Toast.makeText(baseContext, R.string.login_fail, Toast.LENGTH_SHORT).show()
                     }
-
-
                 }
             })
-
         } else {
             student_button.setOnClickListener {
                 LoginActivity.open(this, Constants.STUDENT)

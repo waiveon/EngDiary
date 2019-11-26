@@ -34,17 +34,29 @@
             android:layout_margin="5dp"
             android:inputType="textEmailAddress"
             android:hint="@string/email"
-            app:layout_constraintBottom_toTopOf="@+id/auto_login_checkbox"
+            app:layout_constraintBottom_toTopOf="@+id/passwd_edittext"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_edittext" />
+
+        <EditText
+            android:id="@+id/passwd_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:inputType="textPassword"
+            android:hint="@string/passwd_hint"
+            app:layout_constraintBottom_toTopOf="@+id/auto_login_checkbox"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_edittext" />
 
         <CheckBox
             android:id="@+id/auto_login_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/auto_login"
-            app:layout_constraintTop_toBottomOf="@id/email_edittext"
+            app:layout_constraintTop_toBottomOf="@id/passwd_edittext"
             app:layout_constraintLeft_toLeftOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
